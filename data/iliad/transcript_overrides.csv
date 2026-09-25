@@ -1,0 +1,8 @@
+id,text_clean,reason
+b2_l765,ὄτριχας οἰέτεας σταφύλῃ ἐπὶ νῶτον ἐΐσας·,garbled on reading page (σταφύληῥἐπὶ); Perseus form
+b8_l298,πάντες δ’ ἐν χροῒ πῆχθεν ἀρηϊθόων ἀιζηῶν·,garbled χροῂ; Perseus χροῒ (kept his ἀιζηῶν)
+b8_l303,"υἱὸν ἐῢν Πριάμοιο κατὰ στῆθος βάλεν ἰῷ,",garbled ᾇῷ; Perseus ἰῷ
+b8_l325,"αὐερύοντα παρ’ ὦμον, ὅθι κληῒς ἀποέργει",garbled κληῂς; Perseus κληῒς
+b18_l604,τερπόμενοι· δοιὼ δὲ κυβιστητῆρε κατ’ αὐτοὺς,typo τερρπόμενοι; scanned page spelling (Perseus has a different reading φορμίζων)
+b22_l379,"ἐπεὶ δὴ τόνδ’ ἄνδρα θεοὶ δαμάσασθαι ἔδωκαν,",garbled ἢ πεὶ; Perseus ἐπεὶ
+b23_l2,"ἐπεὶ δὴ νῆας τε καὶ Ἑλλήσποντον ἵκοντο,",garbled ἦ ἐ πεὶ; Perseus ἐπεὶ (kept his νῆας accent)

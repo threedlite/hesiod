@@ -1,0 +1,8 @@
+epoch 0 loss 1.878 val PER 9.13 % (823s)
+epoch 1 loss 0.234 val PER 6.54 % (723s)
+epoch 2 loss 0.169 val PER 5.04 % (715s)
+epoch 3 loss 0.129 val PER 4.35 % (710s)
+epoch 4 loss 0.095 val PER 3.78 % (708s)
+epoch 5 loss 0.066 val PER 3.41 % (706s)
+epoch 6 loss 0.046 val PER 3.33 % (708s)
+epoch 7 loss 0.037 val PER 3.22 % (711s)
