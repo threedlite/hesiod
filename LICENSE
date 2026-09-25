@@ -29,9 +29,10 @@ work or adapting it must keep this notice and give the same credit.
    Perseus Digital Library, Canonical Greek Literature (canonical-greekLit):
    Homer, Iliad (urn:cts:greekLit:tlg0012.tlg001.perseus-grc2);
    Hesiod, Theogony (tlg0020.tlg001.perseus-grc2), Works and Days
-   (tlg0020.tlg002.perseus-grc2), Shield of Heracles (tlg0020.tlg003.perseus-grc2).
+   (tlg0020.tlg002.perseus-grc2), Shield of Heracles (tlg0020.tlg003.perseus-grc2);
+   Homeric Hymns 1–33 (tlg0013.tlg001–tlg033.perseus-grc2).
    https://github.com/PerseusDL/canonical-greekLit. Licensed CC BY-SA 4.0.
-   The synthesized Hesiod audio is a reading of these texts.
+   The synthesized Hesiod and Homeric Hymns audio is a reading of these texts.
 
 3. Morphological treebanks
    Perseus Ancient Greek Dependency Treebank 2.0 (treebank_data):

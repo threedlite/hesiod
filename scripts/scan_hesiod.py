@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""Phase 5/6: scan every Hesiod line with the full Iliad lexicon -> data/hesiod/scansion.csv + summary."""
-import csv, sys
+"""Phase 5/6: scan every line of a corpus (default Hesiod; --corpus hymns) with the full Iliad lexicon -> data/<corpus>/scansion.csv + summary."""
+import argparse, csv, sys
 from collections import Counter
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from prosody.scanner import scan_line
 from prosody import lexicon as L
+sys.path.insert(0, str(Path(__file__).resolve().parent)); from corpora import corpus, add_corpus_arg
 
 ROOT = Path(__file__).resolve().parents[1]
 
 def main():
+    D = ROOT / corpus(add_corpus_arg(argparse.ArgumentParser()).parse_args().corpus)["data"]
     lex = L.load_all(ROOT)
-    rows, out = list(csv.DictReader((ROOT / "data/hesiod/lines.csv").open())), []
+    rows, out = list(csv.DictReader((D / "lines.csv").open())), []
     stats = Counter(); unres = Counter(); flags = Counter(); words = Counter(); words_in_lex = Counter()
     for r in rows:
         s = scan_line(r["text_clean"], lex)
@@ -23,7 +25,7 @@ def main():
         out.append(dict(work=r["work"], n=r["n"], ok=s.ok, pattern=s.pattern, quantities=s.quantities(), cost=s.cost,
                         alternatives=s.n_alternatives, unknown_nuclei=nu, flags=";".join(s.flags),
                         nuclei=" ".join(f"{x.text}:{x.q}:{x.how}" for x in s.nuclei), text=r["text_clean"]))
-    with (ROOT / "data/hesiod/scansion.csv").open("w", newline="") as f:
+    with (D / "scansion.csv").open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(out[0].keys())); w.writeheader(); w.writerows(out)
     print("lines:", len(rows), dict(stats))
     print("flags:", dict(flags.most_common()))

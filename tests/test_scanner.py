@@ -35,3 +35,9 @@ def test_accent_rules():
 def test_hesiod_opening():
     # Theogony 1: Μουσάων Ἑλικωνιάδων ἀρχώμεθ’ ἀείδειν
     assert q("Μουσάων Ἑλικωνιάδων ἀρχώμεθ’ ἀείδειν") == "LLLSSLSSLLLSSLL"
+
+def test_homeric_hymn_openings():
+    # Hymn 2 (Demeter) 1 and Hymn 3 (Apollo) 1: the Hymns scan with the same scanner and lexicon as Hesiod
+    assert q("Δήμητρ’ ἠύκομον, σεμνὴν θεόν, ἄρχομ’ ἀείδειν,") == "LLLSSLLLSSLSSLL"
+    # -ος of Ἀπόλλωνος makes position before ἑκάτοιο (digamma stem ϝεκ-): metrical lengthening, not correption
+    assert q("μνήσομαι οὐδὲ λάθωμαι Ἀπόλλωνος ἑκάτοιο,") == "LSSLSSLSSLLLSSLL"

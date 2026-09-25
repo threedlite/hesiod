@@ -9,6 +9,7 @@ deliverable for the app is the pre-rendered Hesiod audio package; the model,
 converter and scanner are offline tools.
 
 Written 2026-09-23. Revised 2026-09-23 after Phase 1 reconciliation and review.
+Extended 2026-09-25 with Phase 9, the Homeric Hymns, which reuse the finished pipeline.
 
 ---
 
@@ -22,6 +23,7 @@ Written 2026-09-23. Revised 2026-09-23 after Phase 1 reconciliation and review.
 | App audio format spec | `~/git/classicsviewer/audio/AUDIO_SYSTEM_DOCUMENTATION.md` | MP4/AAC, path-parsed metadata, one active package at a time. |
 | Iliad Greek text (TEI) | `~/git/classicsviewer/data-sources/canonical-greekLit/data/tlg0012/tlg001/` | Perseus. Used only for vulgate line numbering; the transcript is Chamberlain's text. |
 | Hesiod Greek text (TEI) | `~/git/classicsviewer/data-sources/canonical-greekLit/data/tlg0020/` | tlg001 Theogony (1022 lines), tlg002 Works and Days (828), tlg003 Shield (480). Target text. |
+| Homeric Hymns Greek text (TEI) | `~/git/classicsviewer/data-sources/canonical-greekLit/data/tlg0013/` | tlg001–tlg033, 2,342 lines. Second target text (Phase 9). Only the Hymn to Demeter has a treebank. |
 | Hesiod treebanks | `~/git/classicsviewer/data-sources/treebank_data/v2.0/Greek/nonArethusaCompliant/tlg0020.*.tb.xml` | Lemma + morphology per token, for the vowel-length lexicon. |
 | Chamberlain's Iliad scansion | `data/scansion/iliad/` (reading pages, audio-index order), `data/scansion/iliad_scanned/` (2026 revision, Perseus-aligned), `data/scansion/iliad_csv/` (2017 CSV) | Every syllable tagged long/short, foot, word, hemistich. Parsed to `data/iliad/hypotactic*_lines.csv`. His syllabification deliberately separates prefixes and is not linguistic. |
 | hypotactic Hesiod readers | `data/scansion/hesiod/` | Theogony and Works and Days with lemma/POS/gloss per word. **No scansion, no Shield, CC BY-NC-SA**: reference only, do not redistribute. |
@@ -436,7 +438,29 @@ recognizer's male bias makes PER a relative metric only; whether the result
 sounds like a woman rather than a pitched-up man is a listening judgment for
 the QA queue.
 
-### Phase 9. Release (1 day)
+### Phase 9. Homeric Hymns (2026-09-25, ½ day)
+
+Status 2026-09-25: done. All 33 hymns (Perseus tlg0013, 2,342 lines) parsed,
+scanned, phonemized, synthesized with `fs2_full`, QC'd and packaged in both
+voices; see `reports/phase9_hymns.md`. Corpus PER 2.91 %; 31 lines (1.32 %)
+above the per-line threshold, five of them the lines Perseus prints in an
+unmetrical form. Packages `data/synth/hymns_fs2_full/hymns_chamberlain_tts_fs2_full.zip`
+and `hymns_chamberlain_tts_female.zip` (2,326 files each; 16 lettered lines
+only in the `_lettered` variants).
+
+The pipeline is unchanged: the same scanner, lexicons, phonemizer, model,
+recognizer and voice-conversion setting as Hesiod. What was added is a corpus
+registry (`scripts/corpora.py`: TEI source, the app's author and work title
+strings, data directory, line-id prefix) and a `--corpus` option on
+`parse_hesiod.py`, `scan_hesiod.py`, `render_hesiod_phones.py` and
+`synth_hesiod.py`, whose defaults still produce the Hesiod tables byte for byte.
+Text handling specific to the Hymns: XML comments and `<note>` dropped,
+`<supplied>`, `<add>` and `<surplus>` text kept because it is what the app
+displays, and `<choice>` read from `<corr>` (Hymn 3.181). Layout
+`Homeric Hymns/Hymn N to <god>/book_1/line_N.mp4`, the strings the app's
+database uses for tlg0013 (every hymn is book 1).
+
+### Phase 10. Release (1 day)
 
 README with attribution, license, method, limitations; model card; publish
 `greek2ipa` and the scanner separately; send Chamberlain a link.

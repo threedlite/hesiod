@@ -1,6 +1,6 @@
 # Hesiod TTS: full project document
 
-As of 2026-09-24. Companion to `PROJECT_PLAN.md` (the plan, with per-phase status)
+As of 2026-09-25. Companion to `PROJECT_PLAN.md` (the plan, with per-phase status)
 and the phase reports in `reports/`. This document is the complete, current
 account of what was built, what the data turned out to contain, what the results
 are, and what remains.
@@ -10,7 +10,8 @@ are, and what remains.
 ## 1. Overview
 
 A synthesized reading of all of Hesiod (Theogony, Works and Days, Shield of
-Heracles) now exists as a Classics Viewer audio package. It was produced by a
+Heracles) now exists as a Classics Viewer audio package, and since 2026-09-25 so
+does one of all 33 Homeric Hymns, made with the same pipeline (§8b). It was produced by a
 text-to-speech model trained on David Chamberlain's line-by-line Iliad
 recordings and judged by automated metrics rather than a listener. The
 synthesized audio scores a 2.4 % phone error rate on unseen Iliad lines and
@@ -26,6 +27,8 @@ vowel-length lexicon built from Chamberlain's own scansion (Track H).
 |---|---|---|
 | Hesiod audio package for the app (2,328 lines; female-voice package alongside) | `data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_fs2_full.zip` | 147 MB |
 | Individual Hesiod WAVs (2,338 lines, 22.05 kHz) | `data/synth/hesiod_fs2_full/wav/` | |
+| Homeric Hymns audio package (2,326 lines; female-voice package alongside) | `data/synth/hymns_fs2_full/hymns_chamberlain_tts_fs2_full.zip` | 154 MB |
+| Individual Homeric Hymns WAVs (2,342 lines) | `data/synth/hymns_fs2_full/wav/`, `data/synth/hymns_fs2_full_female/wav/` | |
 | Acoustic model | `train/runs/fs2_full/best.pt` | 176 MB |
 | Phone recognizer (QA instrument) | `train/checkpoints/phone_ctc.pt` | 13 MB |
 | Forced-alignment acoustic model | `align/chamberlain_acoustic.zip` | 59 MB |
@@ -45,7 +48,7 @@ stay offline tools.
 | His reading pages `homer/iliad{N}.html` | the text he read, with every syllable tagged long/short, foot, word, hemistich (audio-index order) | CC-BY 4.0 |
 | His scanned pages `homer/scanned/iliad{N}scanned.html` (2026 revision) | same, aligned to Perseus numbering, better syllabification | CC-BY 4.0 |
 | His 2017 CSV export `IliadAllCSV.zip` | cross-check only | CC-BY 4.0 |
-| Perseus TEI (`canonical-greekLit`): tlg0012.tlg001, tlg0020.tlg001–003 | vulgate line numbering for the Iliad; the Hesiod text | Perseus CC-BY-SA |
+| Perseus TEI (`canonical-greekLit`): tlg0012.tlg001, tlg0020.tlg001–003, tlg0013.tlg001–033 | vulgate line numbering for the Iliad; the Hesiod and Homeric Hymns texts | Perseus CC-BY-SA |
 | Perseus treebanks (`treebank_data`): Iliad, Theogony, Works and Days, Shield | form, lemma, morphology tag per word, for the lexicon | CC-BY-SA |
 | hypotactic Hesiod readers `hesiod/theogony.html`, `WandD.html` | lemma/gloss per word; **no scansion, no Shield** | CC BY-NC-SA: reference only, not used in any output |
 
@@ -275,6 +278,32 @@ the real voice: `data/synth/fs2_full/test_pred/b1_l1.wav` vs `data/iliad/wavs/b1
 
 ---
 
+## 8b. The Homeric Hymns package (`reports/phase9_hymns.md`)
+
+On 2026-09-25 the finished pipeline was run on the 33 Homeric Hymns (Perseus
+tlg0013, 2,342 lines) without retraining or relexiconizing: the same scanner,
+lexicons, phonemizer, `fs2_full` model, recognizer and female-voice setting. The
+only code change is a corpus registry (`scripts/corpora.py`) and a `--corpus`
+option on the four Hesiod scripts, whose defaults still regenerate the Hesiod
+tables unchanged.
+
+| | Hesiod | Homeric Hymns |
+|---|---|---|
+| Lines | 2,352 | 2,342 |
+| Lines scanning as hexameters | 2,352 | 2,337 (5 lines Perseus prints in an unmetrical form get quantities by nature and position, no foot) |
+| Corpus PER (recognizer) | 3.14 % | 2.91 % (median line 2.86 %, p95 8.57 %) |
+| Lines above 10 % after retries | 31 (1.33 %) | 31 (1.32 %), of which the 5 unmetrical lines are the worst 5 |
+| Package files (unlettered) | 2,328 | 2,326 (16 lettered lines only in the `_lettered` variants) |
+| Layout | `Hesiod/<Work>/book_1/` | `Homeric Hymns/Hymn N to <god>/book_1/`, the app's strings for tlg0013 |
+
+Packages: `data/synth/hymns_fs2_full/hymns_chamberlain_tts_fs2_full.zip`,
+`hymns_chamberlain_tts_female.zip`, and the two `_lettered` variants. Text
+handling specific to the Hymns: XML comments dropped, `<supplied>`/`<add>`/
+`<surplus>` text kept (it is what the app shows), `<choice>` read from `<corr>`
+(Hymn 3.181, where the app shows both readings). Lexicon coverage of the Hymns'
+tokens is 35 %, lower than Hesiod's 44 %; the share of α ι υ left unresolved is
+about the same (5.8 % position-ambiguous, 0.5 % line-final).
+
 ## 9. Decisions (`notes/decisions.md`)
 
 | Date | Decision | Basis |
@@ -287,6 +316,9 @@ the real voice: `data/synth/fs2_full/test_pred/b1_l1.wav` vs `data/iliad/wavs/b1
 | 09-24 | Explicit-duration model + Vocos, not Piper/VITS | MFA durations; control; Vocos transparent; Piper as fallback |
 | 09-24 | Input = phone + quantity + accent + foot embeddings, boundary tokens with pause durations | model is ours, no codepoint packing |
 | 09-24 | Package produced despite 1.33 % > 1 % gate | 31 lines, none above 20 %, listed for listening |
+| 09-25 | Homeric Hymns through the unchanged pipeline; `--corpus` on the Hesiod scripts | same scanner, lexicon, model, recognizer, voice setting; Hesiod defaults regenerate byte for byte |
+| 09-25 | Hymns text: keep supplied/surplus text, read `<corr>`, drop comments and notes | the audio should say what the app displays; the one `<choice>` is a printing correction |
+| 09-25 | Hymns package produced despite 1.32 % > 1 % gate | 5 of the 31 are lines Perseus prints unmetrically; 26 (1.11 %) otherwise |
 
 ---
 
@@ -314,6 +346,8 @@ the real voice: `data/synth/fs2_full/test_pred/b1_l1.wav` vs `data/iliad/wavs/b1
   of the finished audio (+7 st, formants +14 %, no breathiness, chosen by ear over
   the grid's larger warp, which sounded processed; original package kept): `hesiod_chamberlain_tts_female.zip`,
   `reports/phase8_voice.md`.
+- Done 2026-09-25: the 33 Homeric Hymns in both voices (§8b, `reports/phase9_hymns.md`);
+  their 31 flagged lines and 5 unmetrical lines are in the QA queue.
 - Optional: Phase 7b F0 shaping (Product B); model card; a note to Chamberlain.
 
 ---
@@ -327,7 +361,8 @@ hesiod/
                   phase4_tts, phase5_scanner, phase6_hesiod_phones, phase7_hesiod,
                   alignment_qc, prosody_baseline, scanner_validation, eval_*, hesiod_qc_*
   notes/          decisions.md, human_qa_queue.md
-  scripts/        qc_iliad_audio, parse_hypotactic, build_metadata, decode_trim,
+  scripts/        corpora (Hesiod and Homeric Hymns registry),
+                  qc_iliad_audio, parse_hypotactic, build_metadata, decode_trim,
                   diff_transcripts, make_split, build_mfa_corpus, alignment_qc,
                   apply_alignment_exclusions, prosody_baseline, parse_hesiod,
                   scan_hesiod, render_hesiod_phones, validate_scanner,
@@ -340,6 +375,7 @@ hesiod/
   tests/          test_from_spans.py (23), test_scanner.py (5)
   data/iliad/     metadata.csv, phones.csv, line maps, splits/, raw/ and wavs/ (not in git)
   data/hesiod/    lines.csv, phones.csv, scansion.csv
+  data/hymns/     the same three tables for the Homeric Hymns (ids h01_1 … h33_19)
   data/scansion/  hypotactic pages and CSV
   data/features/  training features (not in git)
   data/synth/     synthesized audio, evaluation sets, the Hesiod package
@@ -365,6 +401,14 @@ Order of execution:
    `train/fs2.py train --name fs2_full --epochs 30`; `train/eval_tts.py --ckpt
    train/runs/fs2_full/best.pt` (tts env)
 5. `scripts/synth_hesiod.py --ckpt train/runs/fs2_full/best.pt --package`
+6. Homeric Hymns: `scripts/parse_hesiod.py --corpus hymns`, `scan_hesiod.py --corpus hymns`,
+   `render_hesiod_phones.py --corpus hymns` (system Python), then
+   `synth_hesiod.py --corpus hymns --ckpt train/runs/fs2_full/best.pt --package`,
+   `convert_voice.py --in data/synth/hymns_fs2_full/wav --out data/synth/hymns_fs2_full_female/wav
+   --semitones 7 --alpha1 1.14 --alpha2 1.14 --tilt 0 --h1 0 --breath 0`, and
+   `synth_hesiod.py --corpus hymns --ckpt … --package-only --wav-dir data/synth/hymns_fs2_full_female/wav
+   --package-name hymns_chamberlain_tts_female` (tts env)
 
 Wall-clock on the M4: MFA training 57 min; recognizer 1.7 h; TTS full run 7.5 h;
-Hesiod synthesis, QC and packaging about 40 min.
+Hesiod synthesis, QC and packaging about 40 min. The Homeric Hymns
+(2,342 lines) took 25 min for synthesis, QC and packaging and 5 min for the voice conversion.

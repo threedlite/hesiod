@@ -27,3 +27,18 @@
   (syllable quantity, accent, foot); word boundaries are explicit tokens whose target
   duration is the pause MFA found there (0 if none). No codepoint packing needed since the
   model is ours.
+- 2026-09-25 **Homeric Hymns through the unchanged pipeline.** The 33 hymns (Perseus tlg0013,
+  2,342 lines) use the same scanner, lexicons, phonemizer, `fs2_full` model, recognizer and
+  female-voice setting as Hesiod; nothing was retrained or re-tuned. The change is a corpus
+  registry (`scripts/corpora.py`) and a `--corpus` option on the four Hesiod scripts, whose
+  defaults regenerate `data/hesiod/*` byte for byte (checked with `git diff`).
+- 2026-09-25 **Hymns text: the audio says what the app displays.** `<supplied>`, `<add>` and
+  `<surplus>` text is kept (the app prints it); XML comments and `<note>` are dropped; the one
+  `<choice>` (Hymn 3.181) is read from `<corr>` περικλύστοιο although the app shows both words,
+  because the sic/corr pair is a printing correction, not two readings.
+- 2026-09-25 **Unmetrical lines are synthesized, not skipped.** Five lines that Perseus prints in
+  a form that is not a hexameter (Hymn 2.128, 2.267, 3.181, 4.394, 13.1) take the scanner's
+  fallback (quantities by nature and position, no foot); they are the five worst lines by PER
+  (22–31 %) and are queued for a listener rather than emended.
+- 2026-09-25 **Hymns package produced despite 1.32 % > 1 % gate**, as for Hesiod: 31 lines, of
+  which the 5 unmetrical ones account for the excess (26 otherwise, 1.11 %).
