@@ -22,7 +22,7 @@ def main():
         nu = sum(1 for n in s.nuclei if n.how == "unknown")
         unres[r["work"]] += nu
         for n in s.nuclei: words[r["work"]] += 1
-        out.append(dict(work=r["work"], n=r["n"], ok=s.ok, pattern=s.pattern, quantities=s.quantities(), cost=s.cost,
+        out.append(dict(work=r["work"], book=r.get("book", "1"), n=r["n"], ok=s.ok, pattern=s.pattern, quantities=s.quantities(), cost=s.cost,
                         alternatives=s.n_alternatives, unknown_nuclei=nu, flags=";".join(s.flags),
                         nuclei=" ".join(f"{x.text}:{x.q}:{x.how}" for x in s.nuclei), text=r["text_clean"]))
     with (D / "scansion.csv").open("w", newline="") as f:

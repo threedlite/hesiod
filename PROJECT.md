@@ -29,6 +29,7 @@ vowel-length lexicon built from Chamberlain's own scansion (Track H).
 | Individual Hesiod WAVs (2,338 lines, 22.05 kHz) | `data/synth/hesiod_fs2_full/wav/` | |
 | Homeric Hymns audio package (2,326 lines; female-voice package alongside) | `data/synth/hymns_fs2_full/hymns_chamberlain_tts_fs2_full.zip` | 154 MB |
 | Individual Homeric Hymns WAVs (2,342 lines) | `data/synth/hymns_fs2_full/wav/`, `data/synth/hymns_fs2_full_female/wav/` | |
+| 13 more hexameter corpora, Odyssey to Nonnus (60,357 lines), both voices | `data/synth/<corpus>_fs2_full/<corpus>_chamberlain_tts_{fs2_full,female}.zip` | 8.1 GB |
 | Acoustic model | `train/runs/fs2_full/best.pt` | 176 MB |
 | Phone recognizer (QA instrument) | `train/checkpoints/phone_ctc.pt` | 13 MB |
 | Forced-alignment acoustic model | `align/chamberlain_acoustic.zip` | 59 MB |
@@ -304,6 +305,22 @@ handling specific to the Hymns: XML comments dropped, `<supplied>`/`<add>`/
 tokens is 35 %, lower than Hesiod's 44 %; the share of α ι υ left unresolved is
 about the same (5.8 % position-ambiguous, 0.5 % line-final).
 
+## 8c. The other hexameter poets (`reports/phase10_corpora.md`)
+
+On 2026-09-25 the pipeline was extended to every hexameter author in Perseus
+(`others.txt`): 13 more corpora, 60,479 lines, from Colluthus (394) to Nonnus
+(21,329), one corpus per app author, multi-book works in `book_N/` folders. The
+Iliad is left out because the app already has Chamberlain's recording; elegiac
+works and Theocritus' Aeolic idylls are left out. The code change is the `book`
+column and registry entries; the scanner, lexicons, model and voice setting are
+untouched. The batch ran 6 h 49 min with no failures. Corpus PER: Quintus
+2.58 % and the Odyssey 2.70 % (better than Hesiod), the Hellenistic and imperial
+epics 3.2–3.8 %, Nonnus 4.23 %, and the Doric bucolics worst (Theocritus 5.15 %,
+6.2 % of lines flagged) because the rules and the recognizer are Ionic-epic.
+Over all 15 corpora: 65,051 lines synthesized, 64,946 package files per voice,
+8.7 GB of packages, 2.0 % of lines flagged for a listener.
+`reports/phase10_corpora.md` holds the per-corpus table.
+
 ## 9. Decisions (`notes/decisions.md`)
 
 | Date | Decision | Basis |
@@ -346,6 +363,7 @@ about the same (5.8 % position-ambiguous, 0.5 % line-final).
   of the finished audio (+7 st, formants +14 %, no breathiness, chosen by ear over
   the grid's larger warp, which sounded processed; original package kept): `hesiod_chamberlain_tts_female.zip`,
   `reports/phase8_voice.md`.
+- Done 2026-09-25: the 13 other hexameter corpora in both voices (§8c, `reports/phase10_corpora.md`).
 - Done 2026-09-25: the 33 Homeric Hymns in both voices (§8b, `reports/phase9_hymns.md`);
   their 31 flagged lines and 5 unmetrical lines are in the QA queue.
 - Optional: Phase 7b F0 shaping (Product B); model card; a note to Chamberlain.
@@ -376,6 +394,7 @@ hesiod/
   data/iliad/     metadata.csv, phones.csv, line maps, splits/, raw/ and wavs/ (not in git)
   data/hesiod/    lines.csv, phones.csv, scansion.csv
   data/hymns/     the same three tables for the Homeric Hymns (ids h01_1 … h33_19)
+  data/<corpus>/  the same three tables (with a book column) for the 13 Phase 10 corpora
   data/scansion/  hypotactic pages and CSV
   data/features/  training features (not in git)
   data/synth/     synthesized audio, evaluation sets, the Hesiod package
@@ -408,6 +427,8 @@ Order of execution:
    --semitones 7 --alpha1 1.14 --alpha2 1.14 --tilt 0 --h1 0 --breath 0`, and
    `synth_hesiod.py --corpus hymns --ckpt … --package-only --wav-dir data/synth/hymns_fs2_full_female/wav
    --package-name hymns_chamberlain_tts_female` (tts env)
+7. Other corpora: the three text scripts with `--corpus <name>`, then `bash scripts/run_corpora.sh <name> …`
+   (everything in step 6 per corpus, logged to `data/synth/<name>_fs2_full/pipeline.log`), then `scripts/corpus_summary.py`
 
 Wall-clock on the M4: MFA training 57 min; recognizer 1.7 h; TTS full run 7.5 h;
 Hesiod synthesis, QC and packaging about 40 min. The Homeric Hymns

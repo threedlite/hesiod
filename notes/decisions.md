@@ -42,3 +42,14 @@
   (22–31 %) and are queued for a listener rather than emended.
 - 2026-09-25 **Hymns package produced despite 1.32 % > 1 % gate**, as for Hesiod: 31 lines, of
   which the 5 unmetrical ones account for the excess (26 otherwise, 1.11 %).
+- 2026-09-25 **Every hexameter poet in Perseus (others.txt) goes through the same pipeline**, one corpus
+  per app author, with a `book` column and `book_N/` package folders for multi-book works. The Iliad is
+  left out (the app has Chamberlain's own recording; synthesizing training text proves nothing). Elegiac
+  works are left out by hand (Theocritus and Callimachus Epigrams, Callimachus Hymn 5); non-hexameter
+  books inside a work are dropped when the scanner finds more than a quarter of their lines unmetrical
+  (Theocritus 28, 30) or when listed in `corpora.py` (Theocritus 29, Aeolic, which scans by accident).
+- 2026-09-25 **Printed digammas are dropped** (ϝ in six Argonautica lines and one of Nonnus): the
+  training inventory has no [w], and plan §2 chose a silent digamma with hiatus kept.
+- 2026-09-25 **The package gate is reported, not enforced, per corpus**: the flagged share is expected to
+  rise with distance from Homer (Colluthus 2.3 %); every package is produced and the flagged lines go to
+  `per.csv` and the QA queue (40 worst per corpus).

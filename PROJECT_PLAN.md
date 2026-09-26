@@ -460,7 +460,56 @@ displays, and `<choice>` read from `<corr>` (Hymn 3.181). Layout
 `Homeric Hymns/Hymn N to <god>/book_1/line_N.mp4`, the strings the app's
 database uses for tlg0013 (every hymn is book 1).
 
-### Phase 10. Release (1 day)
+### Phase 10. The other hexameter poets in Perseus (2026-09-25, 1 day + ~10 h compute)
+
+Status 2026-09-25: done. All 13 corpora (60,479 lines) synthesized in both
+voices and packaged in 6 h 49 min with no failures; corpus PER 2.6 % (Quintus)
+to 5.2 % (Theocritus, Doric), 3.5 % over everything; 2.0 % of lines flagged.
+Results table and discussion in `reports/phase10_corpora.md`.
+
+`others.txt` lists the hexameter authors in Perseus. All of them are in the
+local canonical-greekLit checkout and in the app's database, so the finished
+pipeline was run on every hexameter work of theirs, one corpus per app author:
+
+| Corpus | Author (app string) | Works | Lines | Books |
+|---|---|---|---|---|
+| colluthus | Colluthus of Lycopolis | The Rape of Helen | 394 | 1 |
+| tryphiodorus | Tryphiodorus | The Taking of Ilios | 691 | 1 |
+| bion | Bion of Phlossa | Epitaphius Adonis, Epithalamium, Fragmenta | 246 | 1, 1, 16 |
+| moschus | Moschus | Eros Drapeta, Europa, Epitaphius Bios, Megara, Fragmenta | 481 | 1 ×4, 4 |
+| callimachus | Callimachus | Hymns 1–4 and 6 (5 is elegiac; Epigrams elegiac) | 941 | 1 each |
+| aratus | Aratus Solensis | Phaenomena | 1,155 | 1 |
+| theocritus | Theocritus | Εἰδύλλια (Idylls 28–30 Aeolic, dropped; Epigrams elegiac, not included) | 2,717 | 30 |
+| oppian_apamea | Oppian of Apamea | Cynegetica | 2,144 | 4 |
+| oppian | Oppian | Halieutica | 3,506 | 5 |
+| apollonius | Apollonius Rhodius | Argonautica | 5,834 | 4 |
+| quintus | Quintus Smyrnaeus | Fall of Troy | 8,825 | 14 |
+| homer | Homer | Odyssey, Epigrams (the Iliad is Chamberlain's own recording) | 12,216 | 24, 17 |
+| nonnus | Nonnus of Panopolis | Dionysiaca | 21,329 | 48 |
+
+What changed in the code: `scripts/corpora.py` describes each corpus (source,
+the app's strings, book structure, id scheme, books to skip); the four text
+scripts and the synthesizer take books from the TEI `<div subtype="book|poem|epigram">`
+and write them to a `book` column and to `book_N/` in the package (Hesiod and
+the Hymns regenerate identically apart from that column); the parser also drops
+parentheses, quotation marks and printed digammas (silent, plan §2) and reads
+the koronis as an apostrophe; `render_hesiod_phones.py` drops books whose
+unmetrical share is above 25 % (Theocritus 28, 30) or that are listed as
+non-hexameter (29, Aeolic but scanning by accident); `synth_hesiod.py` encodes
+each WAV to MP4 once and hard-links it into the packages; `run_corpora.sh` runs
+synthesis, QC, both voices, all packages and the Phase 8 checks per corpus;
+`corpus_summary.py` tabulates every corpus. Lines with no text (lacunae, 25) and
+non-integer line numbers (`41_43`, `66b`) are synthesized where there is text but
+only the `_lettered` packages carry the latter.
+
+Lexicon coverage falls with distance from Homer (Odyssey 36 % of tokens,
+Hellenistic 22–31 %, Nonnus 22 %); the accent rules and the meter still fix
+most α ι υ. Every corpus scans with the unchanged scanner; the unmetrical lines
+(Theocritus 99 of 2,717, Quintus 41, Nonnus 73, the rest under 10 each) are
+Doric forms, corrupt lines and lacunae, read with fallback quantities as in
+Phase 9.
+
+### Phase 11. Release (1 day)
 
 README with attribution, license, method, limitations; model card; publish
 `greek2ipa` and the scanner separately; send Chamberlain a link.

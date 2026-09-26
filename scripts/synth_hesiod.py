@@ -8,7 +8,7 @@
   4. --package: AAC-LC mono 44.1 kHz 96 kb/s MP4 in <Author>/<Work>/book_1/line_<n>.mp4 and a zip
 Usage: python scripts/synth_hesiod.py [--corpus hymns] --ckpt train/runs/<run>/best.pt [--package] [--limit N]
 """
-import argparse, csv, subprocess, sys, zipfile
+import argparse, csv, os, subprocess, sys, zipfile
 from pathlib import Path
 import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent)); from corpora import corpus, add_corpus_arg
@@ -64,21 +64,28 @@ def main():
         w = csv.writer(f); w.writerow(["id", "work", "n", "per"]); [w.writerow([i, phones[i]["work"], phones[i]["n"], per[i]]) for i in ids]
     if bad:
         qa = ROOT / "notes/human_qa_queue.md"; t = qa.read_text()
-        t += f"\n## {C['author']} synthesized lines above PER {100*PER_MAX:.0f} % ({name})\n" + "".join(f"- {i} ({100*per[i]:.0f} %): {phones[i]['text']}\n" for i in sorted(bad, key=lambda i: -per[i]))
+        worst = sorted(bad, key=lambda i: -per[i]); note = f" (worst 40 of {len(bad)}; all in data/synth/{out.name}/per.csv)" if len(bad) > 40 else ""
+        t += f"\n## {C['author']} synthesized lines above PER {100*PER_MAX:.0f} % ({name}){note}\n" + "".join(f"- {i} ({100*per[i]:.0f} %): {phones[i]['text']}\n" for i in worst[:40])
         qa.write_text(t)
     if args.package: package(out, ids, phones, name)
 
 def package(out, ids, phones, name, wav_dir=None, label=None, lettered=False):
-    """AAC MP4s in <Author>/<Work>/book_1/line_<n>.mp4. Lettered line numbers (Theogony 929a-t, Hymn 2 137a) are
+    """AAC MP4s in <Author>/<Work>/book_<book>/line_<n>.mp4. Lettered line numbers (Theogony 929a-t, Hymn 2 137a) are
     skipped: the app stores them all under the integer line number, so only the unlettered line is addressable."""
     wav_dir = wav_dir or (out / "wav"); label = label or f"{C['name']}_chamberlain_tts_{name}"
     if lettered: label = label + "_lettered"
     pkg = out / ("package" if (wav_dir == out / "wav" and not lettered) else f"package_{label}"); skipped = []
+    mp4 = wav_dir.parent / f"{wav_dir.name}_mp4"; mp4.mkdir(exist_ok=True)      # each WAV is encoded once; packages hard-link the MP4
     for i in ids:
         r = phones[i]
         if not r["n"].isdigit() and not lettered: skipped.append(i); continue
-        d = pkg / C["author"] / C["titles"][r["work"]] / "book_1"; d.mkdir(parents=True, exist_ok=True)
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(wav_dir / f"{i}.wav"), "-ar", "44100", "-ac", "1", "-c:a", "aac", "-b:a", "96k", str(d / f"line_{r['n']}.mp4")], check=True)
+        d = pkg / C["author"] / C["titles"][r["work"]] / f"book_{r.get('book', '1')}"; d.mkdir(parents=True, exist_ok=True)
+        src = mp4 / f"{i}.mp4"
+        if not src.exists() or src.stat().st_mtime < (wav_dir / f"{i}.wav").stat().st_mtime:
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(wav_dir / f"{i}.wav"), "-ar", "44100", "-ac", "1", "-c:a", "aac", "-b:a", "96k", str(src)], check=True)
+        dst = d / f"line_{r['n']}.mp4"
+        if dst.exists(): dst.unlink()
+        os.link(src, dst)
     zpath = out / f"{label}.zip"
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
         for p in sorted(pkg.rglob("*.mp4")): z.write(p, p.relative_to(pkg))

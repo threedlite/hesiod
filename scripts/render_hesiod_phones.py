@@ -13,25 +13,33 @@ sys.path.insert(0, str(Path(__file__).resolve().parent)); from corpora import co
 ROOT = Path(__file__).resolve().parents[1]
 
 def main():
-    C = corpus(add_corpus_arg(argparse.ArgumentParser()).parse_args().corpus); D = ROOT / C["data"]; prefix = C["prefix"]
+    C = corpus(add_corpus_arg(argparse.ArgumentParser()).parse_args().corpus); D = ROOT / C["data"]; ident = C["ident"]
     lex = L.load_all(ROOT)
     train_inv = set((ROOT / "align/phones.txt").read_text().split())
     rows = list(csv.DictReader((D / "lines.csv").open()))
+    # books that are not hexameter (Theocritus 28-30, elegiac epigrams): more than a quarter of their lines unmetrical
+    unm, tot = Counter(), Counter()
+    for r in csv.DictReader((D / "scansion.csv").open()):
+        k = (r["work"], r.get("book", "1")); tot[k] += 1; unm[k] += "unmetrical" in r["flags"]
+    skip = {k for k in tot if tot[k] >= 4 and unm[k] / tot[k] > 0.25} | {(w, b) for w, bs in C["skip_books"].items() for b in bs}
+    if skip: print("books skipped as not hexameter (unmetrical share > 25 %, or listed in corpora.py):", ", ".join(f"{w} {b} ({unm[(w, b)]}/{tot[(w, b)]})" for w, b in sorted(skip)))
     out, inv, flags, wf, wf_known = [], Counter(), Counter(), Counter(), Counter()
     for r in rows:
+        book = r.get("book", "1"); id_ = ident(r["tlg"], book, r["n"])
+        if (r["work"], book) in skip:
+            out.append(dict(work=r["work"], book=book, n=r["n"], id=id_, n_syll="", phones="", quantity="", accent="", foot="", flags="non_hexameter_book", detail="", text=r["text_clean"])); continue
         for w in words_of(r["text_clean"]):
             k = norm_word(w); wf[k] += 1
             if k in lex: wf_known[k] += 1
         words, scan = convert_text(r["text_clean"], lex)
-        id_ = f"{prefix(r['tlg'])}_{r['n']}"
         if words is None:
-            out.append(dict(work=r["work"], n=r["n"], id=id_, n_syll="", phones="", quantity="", accent="", foot="", flags="no_scan", detail="", text=r["text_clean"])); continue
+            out.append(dict(work=r["work"], book=book, n=r["n"], id=id_, n_syll="", phones="", quantity="", accent="", foot="", flags="no_scan", detail="", text=r["text_clean"])); continue
         sy = [s for w in words for s in w.sylls]
         for s in sy:
             for p in s.phones: inv[p] += 1
             for f in s.flags: flags[f] += 1
         for f in scan.flags: flags["scan:" + f] += 1
-        out.append(dict(work=r["work"], n=r["n"], id=id_, n_syll=len(sy), phones=serialize(words),
+        out.append(dict(work=r["work"], book=book, n=r["n"], id=id_, n_syll=len(sy), phones=serialize(words),
                         quantity="".join(s.q for s in sy), accent="".join(s.accent for s in sy), foot="".join(str(s.foot) for s in sy),
                         flags=";".join(f"{i}:{f}" for i, s in enumerate(sy) for f in s.flags),
                         detail=json.dumps([{"text": s.text, "q": s.q, "acc": s.accent, "foot": s.foot, "ph": s.phones, "flags": s.flags} for s in sy], ensure_ascii=False),
