@@ -19,11 +19,11 @@ def main():
         n_lines = len(ph); n_syn = len(per); vals = np.array(list(per.values()))
         unmet = sum(1 for r in csv.DictReader((ROOT / C["data"] / "scansion.csv").open()) if "unmetrical" in r["flags"]); skipped = sum(1 for r in ph.values() if r["flags"] == "non_hexameter_book")
         z = out / f"{c}_chamberlain_tts_fs2_full.zip"; n_pkg = len(zipfile.ZipFile(z).namelist()) if z.exists() else 0
-        zf = out / f"{c}_chamberlain_tts_female.zip"; size = (z.stat().st_size + (zf.stat().st_size if zf.exists() else 0)) / 1e6
+        zf = out / f"{c}_chamberlain_tts_female.zip"; size = (zf.stat().st_size if zf.exists() else 0) / 1e6      # the released package
         ev = ROOT / "data/synth" / f"{c}_fs2_full_female/eval_full.json"; e = json.load(ev.open()) if ev.exists() else None
         rows.append((c, C["author"], dict(lines=n_lines, syn=n_syn, unmet=unmet, skipped=skipped, per=100 * vals.mean(), med=100 * np.median(vals), p95=100 * np.percentile(vals, 95),
                                           bad=int((vals > 0.10).sum()), pkg=n_pkg, mb=size, f0=(e["orig"]["f0_median"], e["conv"]["f0_median"]) if e else None, per_conv=e["per_conv"] if e else None)))
-    print("| Corpus | Author | Lines | Synthesized | Unmetrical | Corpus PER | Median / p95 | > 10 % | Package files | Zips (MB) | Female F0 | Female PER |")
+    print("| Corpus | Author | Lines | Synthesized | Unmetrical | Corpus PER | Median / p95 | > 10 % | Package files | Zip (MB) | Female F0 | Female PER |")
     print("|---|---|---|---|---|---|---|---|---|---|---|---|")
     tot = dict(lines=0, syn=0, bad=0, pkg=0, mb=0.0, err=0.0)
     for c, a, d in rows:

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Phase 10: run the finished pipeline on one or more corpora (scripts/corpora.py), end to end:
-#   synthesis + QC + package (male voice), lettered variant if the corpus has lettered lines,
-#   WORLD conversion to the female voice with the Phase 8 setting, its packages, and the Phase 8 checks
+#   synthesis + QC (the unconverted intermediate, packaged for QC only, not for release),
+#   WORLD conversion to the female voice with the Phase 8 setting, its packages (the deliverable), and the Phase 8 checks
 #   (on a 600-line sample for corpora above 3,000 lines).
 # The text tables (parse/scan/render, system Python) must exist already. Logs: data/synth/<corpus>_fs2_full/pipeline.log.
 # Usage: nohup bash scripts/run_corpora.sh colluthus tryphiodorus ... > data/synth/batch.log 2>&1 &

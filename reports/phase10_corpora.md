@@ -76,8 +76,8 @@ carry them, as for Hesiod 929a–t.
 ## Synthesis, QC, packages
 
 `scripts/run_corpora.sh <corpus>`: synthesis with four duration-scale retries,
-recognizer PER per line, the male package, the female conversion (+7 st, +14 %
-formants, Phase 8), its package, `_lettered` variants where needed, and the
+recognizer PER per line, the female conversion (+7 st, +14 % formants, Phase 8),
+its package, `_lettered` variants where needed, and the
 Phase 8 acoustic checks (a 600-line sample for corpora above 3,000 lines). Each
 WAV is encoded once to MP4 and hard-linked into every package that needs it.
 Rate on the M4: about 1.7 lines per second all in (Colluthus 394 lines in 3.8
@@ -87,28 +87,28 @@ Batch of 2026-09-25, 05:07–11:56 on the M4 (6 h 49 min for the 13 corpora,
 60,479 lines, no failures). `scripts/corpus_summary.py`, all corpora including
 Phases 7 and 9 for comparison:
 
-| Corpus | Author | Lines | Synthesized | Unmetrical | Corpus PER | Median / p95 | > 10 % | Package files | Zips (MB) | Female F0 | Female PER |
+| Corpus | Author | Lines | Synthesized | Unmetrical | Corpus PER | Median / p95 | > 10 % | Package files | Zip (MB) | Female F0 | Female PER |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| hesiod | Hesiod | 2,352 | 2,352 | 0 | 3.15 % | 2.86 / 9.09 | 33 (1.40 %) | 2,328 | 308 | 136 → 206 Hz | 11.3 % |
-| hymns | Homeric Hymns | 2,342 | 2,342 | 5 | 2.91 % | 2.86 / 8.57 | 31 (1.32 %) | 2,326 | 308 | 135 → 205 Hz | 11.2 % |
-| colluthus | Colluthus of Lycopolis | 394 | 394 | 4 | 3.43 % | 2.94 / 9.19 | 9 (2.28 %) | 394 | 54 | 134 → 205 Hz | 11.6 % |
-| tryphiodorus | Tryphiodorus | 691 | 691 | 3 | 3.19 % | 2.94 / 8.70 | 7 (1.01 %) | 691 | 93 | 136 → 207 Hz | 11.5 % |
-| bion | Bion of Phlossa | 246 | 246 | 3 | 4.87 % | 3.45 / 9.92 | 11 (4.47 %) | 246 | 33 | 137 → 209 Hz | 13.3 % |
-| moschus | Moschus | 481 | 481 | 1 | 4.12 % | 3.03 / 9.68 | 17 (3.53 %) | 481 | 64 | 137 → 208 Hz | 12.3 % |
-| callimachus | Callimachus | 941 | 940 | 6 | 3.91 % | 3.03 / 9.09 | 24 (2.55 %) | 940 | 124 | 137 → 207 Hz | 12.3 % |
-| aratus | Aratus Solensis | 1,155 | 1,155 | 4 | 3.38 % | 2.94 / 9.09 | 21 (1.82 %) | 1,154 | 152 | 136 → 206 Hz | 11.4 % |
-| theocritus | Theocritus | 2,717 | 2,617 | 99 (+97 in non-hexameter books) | 5.15 % | 5.26 / 11.11 | 163 (6.23 %) | 2,593 | 341 | 137 → 207 Hz | 13.3 % |
-| oppian_apamea | Oppian of Apamea | 2,144 | 2,144 | 10 | 3.79 % | 3.03 / 9.09 | 47 (2.19 %) | 2,144 | 285 | 137 → 208 Hz | 12.0 % |
-| oppian | Oppian | 3,506 | 3,506 | 5 | 3.53 % | 2.94 / 9.09 | 61 (1.74 %) | 3,506 | 465 | 138 → 208 Hz | 12.2 % |
-| apollonius | Apollonius Rhodius | 5,834 | 5,834 | 6 | 3.16 % | 2.94 / 8.82 | 69 (1.18 %) | 5,832 | 768 | 137 → 207 Hz | 11.7 % |
-| quintus | Quintus Smyrnaeus | 8,825 | 8,804 | 41 | 2.58 % | 2.78 / 8.33 | 63 (0.72 %) | 8,770 | 1166 | 137 → 207 Hz | 11.4 % |
-| homer | Homer | 12,216 | 12,216 | 27 | 2.70 % | 2.78 / 8.57 | 130 (1.06 %) | 12,216 | 1605 | 135 → 205 Hz | 10.8 % |
-| nonnus | Nonnus of Panopolis | 21,329 | 21,329 | 73 | 4.23 % | 3.03 / 9.38 | 643 (3.01 %) | 21,325 | 2908 | 137 → 208 Hz | 13.1 % |
-| **all** | | 65,173 | 65,051 | | 3.48 % | | 1329 (2.04 %) | 64,946 | 8673 | | |
+| hesiod | Hesiod | 2,352 | 2,352 | 0 | 3.15 % | 2.86 / 9.09 | 33 (1.40 %) | 2,328 | 154 | 136 → 206 Hz | 11.3 % |
+| hymns | Homeric Hymns | 2,342 | 2,342 | 5 | 2.91 % | 2.86 / 8.57 | 31 (1.32 %) | 2,326 | 154 | 135 → 205 Hz | 11.2 % |
+| colluthus | Colluthus of Lycopolis | 394 | 394 | 4 | 3.43 % | 2.94 / 9.19 | 9 (2.28 %) | 394 | 27 | 134 → 205 Hz | 11.6 % |
+| tryphiodorus | Tryphiodorus | 691 | 691 | 3 | 3.19 % | 2.94 / 8.70 | 7 (1.01 %) | 691 | 47 | 136 → 207 Hz | 11.5 % |
+| bion | Bion of Phlossa | 246 | 246 | 3 | 4.87 % | 3.45 / 9.92 | 11 (4.47 %) | 246 | 16 | 137 → 209 Hz | 13.3 % |
+| moschus | Moschus | 481 | 481 | 1 | 4.12 % | 3.03 / 9.68 | 17 (3.53 %) | 481 | 32 | 137 → 208 Hz | 12.3 % |
+| callimachus | Callimachus | 941 | 940 | 6 | 3.91 % | 3.03 / 9.09 | 24 (2.55 %) | 940 | 62 | 137 → 207 Hz | 12.3 % |
+| aratus | Aratus Solensis | 1,155 | 1,155 | 4 | 3.38 % | 2.94 / 9.09 | 21 (1.82 %) | 1,154 | 76 | 136 → 206 Hz | 11.4 % |
+| theocritus | Theocritus | 2,717 | 2,617 | 99 (+97 in non-hexameter books) | 5.15 % | 5.26 / 11.11 | 163 (6.23 %) | 2,593 | 171 | 137 → 207 Hz | 13.3 % |
+| oppian_apamea | Oppian of Apamea | 2,144 | 2,144 | 10 | 3.79 % | 3.03 / 9.09 | 47 (2.19 %) | 2,144 | 143 | 137 → 208 Hz | 12.0 % |
+| oppian | Oppian | 3,506 | 3,506 | 5 | 3.53 % | 2.94 / 9.09 | 61 (1.74 %) | 3,506 | 233 | 138 → 208 Hz | 12.2 % |
+| apollonius | Apollonius Rhodius | 5,834 | 5,834 | 6 | 3.16 % | 2.94 / 8.82 | 69 (1.18 %) | 5,832 | 385 | 137 → 207 Hz | 11.7 % |
+| quintus | Quintus Smyrnaeus | 8,825 | 8,804 | 41 | 2.58 % | 2.78 / 8.33 | 63 (0.72 %) | 8,770 | 584 | 137 → 207 Hz | 11.4 % |
+| homer | Homer | 12,216 | 12,216 | 27 | 2.70 % | 2.78 / 8.57 | 130 (1.06 %) | 12,216 | 804 | 135 → 205 Hz | 10.8 % |
+| nonnus | Nonnus of Panopolis | 21,329 | 21,329 | 73 | 4.23 % | 3.03 / 9.38 | 643 (3.01 %) | 21,325 | 1459 | 137 → 208 Hz | 13.1 % |
+| **all** | | 65,173 | 65,051 | | 3.48 % | | 1329 (2.04 %) | 64,946 | 4348 | | |
 
 "Lines" counts the TEI lines; "Synthesized" excludes empty lines and dropped
 books; "Package files" excludes non-integer line numbers, which the `_lettered`
-variants carry; "Zips" is the male plus the female package; "Female PER" is the
+variants carry; "Zip" is the released female package; "Female PER" is the
 male-trained recognizer on the converted audio (Phase 8: relative guard only).
 
 What the table shows:
@@ -140,8 +140,8 @@ The worst 40 lines of each corpus are in `notes/human_qa_queue.md`; all are in
 
 ## Packages
 
-`data/synth/<corpus>_fs2_full/<corpus>_chamberlain_tts_fs2_full.zip` and
-`<corpus>_chamberlain_tts_female.zip`, AAC-LC mono 44.1 kHz 96 kb/s, importable
+`data/synth/<corpus>_fs2_full/<corpus>_chamberlain_tts_female.zip`, AAC-LC mono
+44.1 kHz 96 kb/s, importable
 through Settings → Manage Audio one at a time. Theocritus' package uses the
 app's Greek title `Εἰδύλλια` as the folder name (UTF-8 zip entries); whether
 the importer matches it is an open item for the device test.

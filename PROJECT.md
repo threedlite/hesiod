@@ -11,9 +11,11 @@ are, and what remains.
 
 A synthesized reading of all of Hesiod (Theogony, Works and Days, Shield of
 Heracles) now exists as a Classics Viewer audio package, and since 2026-09-25 so
-does one of all 33 Homeric Hymns, made with the same pipeline (§8b). It was produced by a
-text-to-speech model trained on David Chamberlain's line-by-line Iliad
-recordings and judged by automated metrics rather than a listener. The
+does one of all 33 Homeric Hymns and of the other hexameter poets in Perseus,
+made with the same pipeline (§8b, §8c). It was produced by a text-to-speech
+model trained on David Chamberlain's line-by-line Iliad recordings, converted to
+a female voice by signal processing (§8a), and judged by automated metrics
+rather than a listener. The audio that is distributed is the female-voice package; the unconverted synthesis stays on disk as an intermediate for QC and is not released, because it is too close to Chamberlain's own voice. The
 synthesized audio scores a 2.4 % phone error rate on unseen Iliad lines and
 3.1 % on Hesiod, against 3.2 % for Chamberlain's own recordings, with his
 metrical rhythm and his conservative pitch accent reproduced within tolerance.
@@ -25,11 +27,11 @@ vowel-length lexicon built from Chamberlain's own scansion (Track H).
 
 | Deliverable | Where | Size |
 |---|---|---|
-| Hesiod audio package for the app (2,328 lines; female-voice package alongside) | `data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_fs2_full.zip` | 147 MB |
-| Individual Hesiod WAVs (2,338 lines, 22.05 kHz) | `data/synth/hesiod_fs2_full/wav/` | |
-| Homeric Hymns audio package (2,326 lines; female-voice package alongside) | `data/synth/hymns_fs2_full/hymns_chamberlain_tts_fs2_full.zip` | 154 MB |
+| Hesiod audio package for the app (2,328 lines, female voice) | `data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_female.zip` | 146 MB |
+| Individual Hesiod WAVs (2,352 lines, 22.05 kHz; the unconverted intermediate, not for release) | `data/synth/hesiod_fs2_full/wav/` | |
+| Homeric Hymns audio package (2,326 lines, female voice) | `data/synth/hymns_fs2_full/hymns_chamberlain_tts_female.zip` | 154 MB |
 | Individual Homeric Hymns WAVs (2,342 lines) | `data/synth/hymns_fs2_full/wav/`, `data/synth/hymns_fs2_full_female/wav/` | |
-| 13 more hexameter corpora, Odyssey to Nonnus (60,357 lines), both voices | `data/synth/<corpus>_fs2_full/<corpus>_chamberlain_tts_{fs2_full,female}.zip` | 8.1 GB |
+| 13 more hexameter corpora, Odyssey to Nonnus (60,357 lines), female voice | `data/synth/<corpus>_fs2_full/<corpus>_chamberlain_tts_female.zip` | 4.1 GB |
 | Acoustic model | `train/runs/fs2_full/best.pt` | 176 MB |
 | Phone recognizer (QA instrument) | `train/checkpoints/phone_ctc.pt` | 13 MB |
 | Forced-alignment acoustic model | `align/chamberlain_acoustic.zip` | 59 MB |
@@ -254,9 +256,10 @@ the recognizer's own uncertainty.
 
 ---
 
-## 8. The Hesiod package (`reports/phase7_hesiod.md`)
+## 8. The Hesiod package (`reports/phase7_hesiod.md`, `reports/phase8_voice.md`)
 
-`data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_fs2_full.zip`, AAC-LC mono
+`data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_female.zip` (the released
+package; the unconverted `hesiod_chamberlain_tts_fs2_full.zip` is kept for QC only), AAC-LC mono
 44.1 kHz 96 kb/s MP4, the Classics Viewer layout with the app's own title
 strings (author "Hesiod"; the app stores every Hesiod work as book 1):
 
@@ -297,8 +300,8 @@ tables unchanged.
 | Package files (unlettered) | 2,328 | 2,326 (16 lettered lines only in the `_lettered` variants) |
 | Layout | `Hesiod/<Work>/book_1/` | `Homeric Hymns/Hymn N to <god>/book_1/`, the app's strings for tlg0013 |
 
-Packages: `data/synth/hymns_fs2_full/hymns_chamberlain_tts_fs2_full.zip`,
-`hymns_chamberlain_tts_female.zip`, and the two `_lettered` variants. Text
+Package: `data/synth/hymns_fs2_full/hymns_chamberlain_tts_female.zip` (and its
+`_lettered` variant); the unconverted zip is kept for QC only. Text
 handling specific to the Hymns: XML comments dropped, `<supplied>`/`<add>`/
 `<surplus>` text kept (it is what the app shows), `<choice>` read from `<corr>`
 (Hymn 3.181, where the app shows both readings). Lexicon coverage of the Hymns'
@@ -317,8 +320,8 @@ untouched. The batch ran 6 h 49 min with no failures. Corpus PER: Quintus
 2.58 % and the Odyssey 2.70 % (better than Hesiod), the Hellenistic and imperial
 epics 3.2–3.8 %, Nonnus 4.23 %, and the Doric bucolics worst (Theocritus 5.15 %,
 6.2 % of lines flagged) because the rules and the recognizer are Ionic-epic.
-Over all 15 corpora: 65,051 lines synthesized, 64,946 package files per voice,
-8.7 GB of packages, 2.0 % of lines flagged for a listener.
+Over all 15 corpora: 65,051 lines synthesized, 64,946 package files, 4.3 GB
+of released packages, 2.0 % of lines flagged for a listener.
 `reports/phase10_corpora.md` holds the per-corpus table.
 
 ## 9. Decisions (`notes/decisions.md`)
@@ -333,6 +336,7 @@ Over all 15 corpora: 65,051 lines synthesized, 64,946 package files per voice,
 | 09-24 | Explicit-duration model + Vocos, not Piper/VITS | MFA durations; control; Vocos transparent; Piper as fallback |
 | 09-24 | Input = phone + quantity + accent + foot embeddings, boundary tokens with pause durations | model is ours, no codepoint packing |
 | 09-24 | Package produced despite 1.33 % > 1 % gate | 31 lines, none above 20 %, listed for listening |
+| 09-25 | Only the female-voice package is released; the unconverted synthesis is an intermediate | too close to Chamberlain's own voice |
 | 09-25 | Homeric Hymns through the unchanged pipeline; `--corpus` on the Hesiod scripts | same scanner, lexicon, model, recognizer, voice setting; Hesiod defaults regenerate byte for byte |
 | 09-25 | Hymns text: keep supplied/surplus text, read `<corr>`, drop comments and notes | the audio should say what the app displays; the one `<choice>` is a printing correction |
 | 09-25 | Hymns package produced despite 1.32 % > 1 % gate | 5 of the 31 are lines Perseus prints unmetrically; 26 (1.11 %) otherwise |
@@ -359,12 +363,12 @@ Over all 15 corpora: 65,051 lines synthesized, 64,946 package files per voice,
   the 14 recovered lines, the 7 repaired Iliad transcripts, the 6 edition
   variants, the 2 shortest clips, the speaker-profile inferences, and the
   synthesized Iliad opening next to the original.
-- Done: Phase 8, a second package in a female voice by WORLD/pyworld conversion
+- Done: Phase 8, the released package in a female voice by WORLD/pyworld conversion
   of the finished audio (+7 st, formants +14 %, no breathiness, chosen by ear over
-  the grid's larger warp, which sounded processed; original package kept): `hesiod_chamberlain_tts_female.zip`,
+  the grid's larger warp, which sounded processed): `hesiod_chamberlain_tts_female.zip`,
   `reports/phase8_voice.md`.
-- Done 2026-09-25: the 13 other hexameter corpora in both voices (§8c, `reports/phase10_corpora.md`).
-- Done 2026-09-25: the 33 Homeric Hymns in both voices (§8b, `reports/phase9_hymns.md`);
+- Done 2026-09-25: the 13 other hexameter corpora (§8c, `reports/phase10_corpora.md`).
+- Done 2026-09-25: the 33 Homeric Hymns (§8b, `reports/phase9_hymns.md`);
   their 31 flagged lines and 5 unmetrical lines are in the QA queue.
 - Optional: Phase 7b F0 shaping (Product B); model card; a note to Chamberlain.
 

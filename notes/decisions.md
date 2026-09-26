@@ -53,3 +53,8 @@
 - 2026-09-25 **The package gate is reported, not enforced, per corpus**: the flagged share is expected to
   rise with distance from Homer (Colluthus 2.3 %); every package is produced and the flagged lines go to
   `per.csv` and the QA queue (40 worst per corpus).
+- 2026-09-25 **Only the female-voice package is released.** The unconverted synthesis reproduces
+  Chamberlain's voice too closely to distribute; it stays on disk as the intermediate the QC
+  metrics are computed on (the recognizer was trained on his voice) and as the input to the
+  WORLD conversion. Every `*_chamberlain_tts_female.zip` is the deliverable; the `*_fs2_full.zip`
+  files are not to be shipped.

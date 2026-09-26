@@ -57,10 +57,11 @@ work or adapting it must keep this notice and give the same credit.
    pretrained charactr/vocos-mel-24khz weights (MIT), Praat/parselmouth (GPL-3,
    used as a tool, not distributed here).
 
-6. The female-voice package (hesiod_chamberlain_tts_female.zip) is a signal-
-   processing transformation of the same synthesized audio (WORLD vocoder,
-   Masanori Morise, modified BSD; pyworld, MIT): pitch, formants and breathiness
-   are altered, the reading and prosody are Chamberlain's.
+6. The released audio packages (*_chamberlain_tts_female.zip) are a signal-
+   processing transformation of the synthesized audio (WORLD vocoder,
+   Masanori Morise, modified BSD; pyworld, MIT): pitch and formants are
+   altered so that the voice is not Chamberlain's; the reading and prosody are
+   his. The unconverted synthesis is not distributed.
 
 Not used in any output: the Hesiod vocabulary readers at hypotactic.com/hesiod/
 (CC BY-NC-SA 4.0), consulted for reference only.

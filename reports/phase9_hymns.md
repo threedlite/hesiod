@@ -85,16 +85,16 @@ of Hymn 17; every hymn is book 1):
 
 | Package | Files | Size |
 |---|---|---|
-| `hymns_chamberlain_tts_fs2_full.zip` | 2,326 | 154 MB |
-| `hymns_chamberlain_tts_female.zip` | 2,326 | 154 MB |
-| `hymns_chamberlain_tts_fs2_full_lettered.zip`, `hymns_chamberlain_tts_female_lettered.zip` | 2,342 each | for an app that accepts `line_137a` |
+| `hymns_chamberlain_tts_female.zip` (released) | 2,326 | 154 MB |
+| `hymns_chamberlain_tts_female_lettered.zip` | 2,342 | for an app that accepts `line_137a` |
+| `hymns_chamberlain_tts_fs2_full.zip` and its `_lettered` variant | 2,326 / 2,342 | the unconverted intermediate, QC only, not for release |
 
 Files per hymn: 21, 495, 546, 580, 293, 21, 59, 17, 9, 6, 5, 5, 3, 6, 9, 5, 5,
 12, 49, 8, 5, 7, 4, 5, 7, 13, 22, 18, 14, 19, 19, 20, 19 for Hymns 1–33; these
 match the app's `books.line_count` except where lettered lines are excluded.
 Import through Settings → Manage Audio.
 
-## Female voice
+## Female voice (the released audio)
 
 `scripts/convert_voice.py --semitones 7 --alpha1 1.14 --alpha2 1.14 --tilt 0 --h1 0 --breath 0`,
 the setting chosen by ear for Hesiod (Phase 8), 8 processes, 5 min. F0 median

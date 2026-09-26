@@ -3,6 +3,8 @@
 Date: 2026-09-24. Model `train/runs/fs2_full/best.pt` (Phase 4). Script
 `scripts/synth_hesiod.py`. Output directory `data/synth/hesiod_fs2_full/`.
 
+*Update 2026-09-25:* The audio that is distributed is the female-voice package; the unconverted synthesis stays on disk as an intermediate for QC and is not released, because it is too close to Chamberlain's own voice. The package described below is that intermediate; the released one is its conversion (`reports/phase8_voice.md`).
+
 ## Package
 
 `data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_fs2_full.zip` (147 MB), the

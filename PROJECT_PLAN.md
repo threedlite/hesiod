@@ -5,7 +5,9 @@ Chamberlain's line-by-line Iliad recordings (hypotactic.com), then use it to
 generate a reading of Hesiod (Theogony, Works and Days, Shield) in reconstructed
 pronunciation following W. Sidney Allen's *Vox Graeca*, with metrical quantity
 realized and pitch accent realized as far as the data allows (see §2). The only
-deliverable for the app is the pre-rendered Hesiod audio package; the model,
+deliverable for the app is the pre-rendered audio package in the converted female
+voice (Phase 8; the unconverted synthesis is not released, being too close to
+Chamberlain's own voice); the model,
 converter and scanner are offline tools.
 
 Written 2026-09-23. Revised 2026-09-23 after Phase 1 reconciliation and review.
@@ -347,12 +349,13 @@ Status 2026-09-24: done. Search over 96 settings; the grid's choice (+8 st, warp
 1.22/1.16, breathy) sounded processed to the listener, so the mild setting
 (+7 st, uniform +14 % formants, no breathiness) was adopted; all 2,338 lines converted to
 `data/synth/hesiod_fs2_full_female/wav/`, package
-`data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_female.zip`; original untouched.
+`data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_female.zip`, the released package;
+the unconverted audio is kept as an intermediate for QC only (decision 2026-09-25).
 See `reports/phase8_voice.md`. Finding: the male-trained recognizer penalizes
 female formants, so selection was on acoustic targets with PER as a guard.
 
-Goal: a second Hesiod package in a female voice, made from the finished Product A
-audio by signal processing, with the original package untouched. Method: the
+Goal: the Hesiod package in a female voice, made from the finished Product A
+audio by signal processing; the unconverted audio is not distributed. Method: the
 WORLD vocoder through `pyworld` (installed in the `tts` env; verified: 0.6 s per
 line with `harvest`, 0.2 s with `dio`), which separates each line into F0, a
 spectral envelope and aperiodicity so the three can be scaled independently
@@ -428,7 +431,7 @@ directory and a package name, producing
 
 **Deliverables.** `scripts/convert_voice.py`, the female WAV directory and
 package, `reports/phase8_voice.md` with the chosen parameters and the grid
-results, the original package unchanged, and a line in `LICENSE`'s notice
+results, and a line in `LICENSE`'s notice
 that the female voice is a transformation of Chamberlain's.
 
 **Risks.** WORLD buzz or metallic timbre at large shifts (mitigated by the
@@ -441,12 +444,11 @@ the QA queue.
 ### Phase 9. Homeric Hymns (2026-09-25, ½ day)
 
 Status 2026-09-25: done. All 33 hymns (Perseus tlg0013, 2,342 lines) parsed,
-scanned, phonemized, synthesized with `fs2_full`, QC'd and packaged in both
-voices; see `reports/phase9_hymns.md`. Corpus PER 2.91 %; 31 lines (1.32 %)
+scanned, phonemized, synthesized with `fs2_full`, QC'd, converted and packaged;
+see `reports/phase9_hymns.md`. Corpus PER 2.91 %; 31 lines (1.32 %)
 above the per-line threshold, five of them the lines Perseus prints in an
-unmetrical form. Packages `data/synth/hymns_fs2_full/hymns_chamberlain_tts_fs2_full.zip`
-and `hymns_chamberlain_tts_female.zip` (2,326 files each; 16 lettered lines
-only in the `_lettered` variants).
+unmetrical form. Package `data/synth/hymns_fs2_full/hymns_chamberlain_tts_female.zip`
+(2,326 files; 16 lettered lines only in the `_lettered` variant).
 
 The pipeline is unchanged: the same scanner, lexicons, phonemizer, model,
 recognizer and voice-conversion setting as Hesiod. What was added is a corpus
@@ -462,8 +464,8 @@ database uses for tlg0013 (every hymn is book 1).
 
 ### Phase 10. The other hexameter poets in Perseus (2026-09-25, 1 day + ~10 h compute)
 
-Status 2026-09-25: done. All 13 corpora (60,479 lines) synthesized in both
-voices and packaged in 6 h 49 min with no failures; corpus PER 2.6 % (Quintus)
+Status 2026-09-25: done. All 13 corpora (60,479 lines) synthesized, converted
+and packaged in 6 h 49 min with no failures; corpus PER 2.6 % (Quintus)
 to 5.2 % (Theocritus, Doric), 3.5 % over everything; 2.0 % of lines flagged.
 Results table and discussion in `reports/phase10_corpora.md`.
 
@@ -497,7 +499,7 @@ the koronis as an apostrophe; `render_hesiod_phones.py` drops books whose
 unmetrical share is above 25 % (Theocritus 28, 30) or that are listed as
 non-hexameter (29, Aeolic but scanning by accident); `synth_hesiod.py` encodes
 each WAV to MP4 once and hard-links it into the packages; `run_corpora.sh` runs
-synthesis, QC, both voices, all packages and the Phase 8 checks per corpus;
+synthesis, QC, the voice conversion, the package and the Phase 8 checks per corpus;
 `corpus_summary.py` tabulates every corpus. Lines with no text (lacunae, 25) and
 non-integer line numbers (`41_43`, `66b`) are synthesized where there is text but
 only the `_lettered` packages carry the latter.

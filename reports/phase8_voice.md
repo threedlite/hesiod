@@ -1,5 +1,7 @@
 # Phase 8: female voice by WORLD conversion
 
+*Update 2026-09-25:* the converted package is the only one released; the unconverted synthesis is too close to Chamberlain's own voice and stays an intermediate.
+
 Date: 2026-09-24. Code: `scripts/convert_voice.py` (pyworld: harvest+stonemask, CheapTrick, D4C), `scripts/eval_voice.py` (checks), `scripts/grid_voice.py` (search). Search data: `data/synth/voice_grid/results.csv` (96 settings × 40 Hesiod lines).
 
 ## What the search showed
@@ -49,7 +51,7 @@ trained on female speech, at the cost of the guaranteed accent preservation).
 All 2,338 Hesiod lines and the Iliad test passage (1.1–52) converted with the revised
 setting: `data/synth/hesiod_fs2_full_female/wav/`, `data/synth/fs2_full_female/test_pred/`.
 Package `data/synth/hesiod_fs2_full/hesiod_chamberlain_tts_female.zip` (2,328 files after the 14 recovered lines,
-146 MB, same layout and exclusions as the original; the original package is untouched).
+146 MB, same layout and exclusions as the unconverted intermediate).
 
 Checks on all 2,338 lines (`data/synth/hesiod_fs2_full_female/eval_full.json`), revised setting:
 
