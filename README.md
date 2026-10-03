@@ -25,8 +25,10 @@ Please keep the attribution notice when redistributing or adapting.
 ## What is read
 
 Every hexameter poet in Perseus, in a female voice derived by signal processing
-from the trained model's output. The packages are
-`data/synth/<corpus>_fs2_full/<corpus>_chamberlain_tts_female.zip`; the folder
+from the trained model's output. The packages and the models are published in
+the **[v1.0 release](https://github.com/threedlite/hesiod/releases/tag/v1.0)**
+(file list below); locally they are
+`data/synth/<corpus>_fs2_full/<corpus>_chamberlain_tts_female.zip`. The folder
 names inside are the app's own author and work strings. The unconverted
 synthesis is an intermediate for QC and is not distributed: it is too close to
 Chamberlain's own voice. Lines are the Perseus line counts; the corpus PER is the
@@ -54,16 +56,71 @@ own recordings).
 Not in Perseus, so not read: Nicander, Euphorion, Rhianus, Antimachus,
 Panyassis, Choerilus, Dionysius Periegetes, Musaeus, Gregory of Nazianzus, the
 Orphica, the Sibylline Oracles. Details per corpus: `reports/phase7_hesiod.md`,
-`reports/phase9_hymns.md`, `reports/phase10_corpora.md`.
+`reports/phase9_hymns.md`, `reports/phase10_corpora.md`. What it would take to
+read the rest of Perseus, prose included, is in `PERSEUS_AUDIO.md`.
+
+## The release
+
+[v1.0: the hexameter poets](https://github.com/threedlite/hesiod/releases/tag/v1.0)
+(2026-10-03, tag `v1.0`), 19 files, 4.3 GB. Packages are AAC-LC mono 44.1 kHz
+96 kb/s MP4, one file per line, `<Author>/<Work>/book_N/line_N.mp4`, imported
+through Settings → Manage Audio; the line count is the number of files in the
+package (lettered lines such as Theogony 929a are not addressable by the app and
+are left out). Every file is listed in `SHA256SUMS.txt`. Known defect: the 208
+lines that fell back to no metre are garbled in this release (`PERSEUS_AUDIO.md`
+§3, §4.1).
+
+| File | Size | Contents |
+|---|---|---|
+| `hesiod_chamberlain_tts_female.zip` | 154 MB | Hesiod: Theogony, Works and Days, Shield of Heracles — 2,328 lines |
+| `hymns_chamberlain_tts_female.zip` | 154 MB | Homeric Hymns 1–33 — 2,326 lines |
+| `homer_chamberlain_tts_female.zip` | 804 MB | Homer: Odyssey, Epigrams — 12,216 lines |
+| `apollonius_chamberlain_tts_female.zip` | 385 MB | Apollonius Rhodius: Argonautica — 5,832 lines |
+| `theocritus_chamberlain_tts_female.zip` | 171 MB | Theocritus: Idylls — 2,593 lines |
+| `moschus_chamberlain_tts_female.zip` | 32 MB | Moschus — 481 lines |
+| `bion_chamberlain_tts_female.zip` | 16 MB | Bion of Phlossa — 246 lines |
+| `callimachus_chamberlain_tts_female.zip` | 62 MB | Callimachus: Hymns 1–4 and 6 — 940 lines |
+| `aratus_chamberlain_tts_female.zip` | 76 MB | Aratus: Phaenomena — 1,154 lines |
+| `quintus_chamberlain_tts_female.zip` | 584 MB | Quintus Smyrnaeus: Fall of Troy — 8,770 lines |
+| `oppian_chamberlain_tts_female.zip` | 233 MB | Oppian: Halieutica — 3,506 lines |
+| `oppian_apamea_chamberlain_tts_female.zip` | 143 MB | Oppian of Apamea: Cynegetica — 2,144 lines |
+| `nonnus_chamberlain_tts_female.zip` | 1,459 MB | Nonnus of Panopolis: Dionysiaca — 21,325 lines |
+| `tryphiodorus_chamberlain_tts_female.zip` | 47 MB | Tryphiodorus: The Taking of Ilios — 691 lines |
+| `colluthus_chamberlain_tts_female.zip` | 27 MB | Colluthus of Lycopolis: The Rape of Helen — 394 lines |
+| `fs2_full_model.tar.gz` | 162 MB | the acoustic model `best.pt` with its `config.json`; unpack into `train/runs/fs2_full/` for `train/fs2.py synth` and `scripts/synth_hesiod.py` |
+| `phone_ctc.pt` | 13 MB | the phone recognizer used for QC; goes in `train/checkpoints/` for `train/recognize.py` |
+| `chamberlain_acoustic.zip` | 61 MB | the Montreal Forced Aligner acoustic model; goes in `align/` for `align/run_align.sh align` |
+| `SHA256SUMS.txt` | 2 KB | SHA-256 of the 18 files above |
+
+Not released: the unconverted synthesis (too close to Chamberlain's own voice),
+the `_lettered` package variants, and the pretrained Vocos vocoder
+(`charactr/vocos-mel-24khz`), which the code downloads.
+
+`scripts/fetch_release.sh` downloads from the release into the places the code
+expects, checking every file against `SHA256SUMS.txt`:
+
+```
+bash scripts/fetch_release.sh --list            # what is available
+bash scripts/fetch_release.sh hesiod hymns      # packages by corpus name -> data/synth/<corpus>_fs2_full/
+bash scripts/fetch_release.sh models            # best.pt + config.json -> train/runs/fs2_full/, phone_ctc.pt -> train/checkpoints/,
+                                                # chamberlain_acoustic.zip -> align/
+bash scripts/fetch_release.sh all               # everything, 4.3 GB
+```
+
+Re-running skips what is already in place; `--verify` re-checks files in place
+against the checksums (the model tarball is re-fetched, since the checksum is of
+the archive). `HESIOD_RELEASE`, `HESIOD_RELEASE_REPO` and `HESIOD_RELEASE_DEST`
+select another tag, repository or destination root.
 
 ## What is here
 
 | Path | Contents |
 |---|---|
 | `PROJECT_PLAN.md` | the plan, with status per phase |
+| `PERSEUS_AUDIO.md` | what reading all the Greek in Perseus would take: inventory, a probe of the model outside the hexameter, prose, voices, scale, order of work |
 | `reports/` | one report per phase: corpus reconciliation, phones, alignment and prosody baseline, scanner, Hesiod phones, TTS, Hesiod QC, female voice, Homeric Hymns, the other poets; one QC report per corpus |
 | `notes/decisions.md`, `notes/human_qa_queue.md` | decisions with their evidence; what only a listener can settle |
-| `scripts/` | corpus QC, hypotactic parsing, transcript cleanup, split, MFA corpus, alignment QC, prosody baseline, parse/scan/render/synthesis for every corpus (`--corpus`, registry in `corpora.py`, batch runner `run_corpora.sh`), voice conversion |
+| `scripts/` | corpus QC, hypotactic parsing, transcript cleanup, split, MFA corpus, alignment QC, prosody baseline, parse/scan/render/synthesis for every corpus (`--corpus`, registry in `corpora.py`, batch runner `run_corpora.sh`), voice conversion; `probe_non_hexameter.py` and `voice_sphere.py` for `PERSEUS_AUDIO.md` |
 | `greek2ipa/` | Allen-based phonemization from Chamberlain's syllable spans (`from_spans.py`) and from plain text via the scanner (`from_text.py`) |
 | `prosody/` | hexameter scanner, vowel-length lexicon and its lemma/ending extension |
 | `train/` | feature preparation, the acoustic model (`fs2.py`), the phone recognizer used for QC (`phone_ctc.py`, `recognize.py`), evaluation |
@@ -88,6 +145,10 @@ audio scores 2.4 % phone error rate on unseen Iliad lines, 3.1 % on Hesiod,
 recordings; the Doric bucolic poets score worst at about 5 %.
 
 ## Reproducing
+
+To use the released models and packages without rebuilding anything:
+`bash scripts/fetch_release.sh models` (and any corpora wanted); the steps below
+regenerate them from the sources.
 
 Environments: system Python 3 for text processing; conda env `aligner`
 (Montreal Forced Aligner, parselmouth) and conda env `tts` (PyTorch, Vocos,
